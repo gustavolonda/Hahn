@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Microsoft.Extensions.Logging;
 
 using System.Threading.Tasks;
 namespace Hahn.ApplicatonProcess.July2021.Data.DataAccess
@@ -15,6 +16,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.DataAccess
     public class UnitOfWork : IUnitOfWork
     {
         private AppDbContext _context;
+        private readonly ILogger _logger;
         public IGenericRepository<User> userRepository;
         public IGenericRepository<Asset> assetRepository;
         // Init
@@ -30,7 +32,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.DataAccess
 
                 if (this.userRepository == null)
                 {
-                    this.userRepository = new GenericRepository<User>(_context);
+                    this.userRepository = new GenericRepository<User>(_context, _logger);
                 }
                 return userRepository;
             }
@@ -43,7 +45,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.DataAccess
 
                 if (this.assetRepository == null)
                 {
-                    this.assetRepository = new GenericRepository<Asset>(_context);
+                    this.assetRepository = new GenericRepository<Asset>(_context, _logger);
                 }
                 return assetRepository;
             }
