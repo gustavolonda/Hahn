@@ -12,6 +12,9 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Core.Repositories
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
+        /********************************************************
+       *              Implements User Repository             *
+       *********************************************************/
         public UserRepository(
             AppDbContext context,
             ILogger logger
@@ -19,20 +22,20 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Core.Repositories
         {
             
         }
-
-        public override async Task<IEnumerable<User>> GetAll()
+        public override async Task<User> GetById(int id)
         {
-            try
+             try
             {
-                return await dbSet.ToListAsync();
+                return await dbSet.FindAsync(id);
             }
             catch(Exception ex)
             {
-                this.logger.LogError(ex, "{Repo} All method error", typeof(UserRepository));
-                return new List<User>();
+                this.logger.LogError(ex,  "{Repo} Upsert method error", typeof(UserRepository));
+                return new User();
+                
             }
-        }
-
+            
+        } 
         public override async Task<bool> Update(User entity)
         {
             try
