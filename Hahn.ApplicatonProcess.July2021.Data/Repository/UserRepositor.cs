@@ -13,7 +13,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Core.Repositories
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
         /********************************************************
-       *              Implements User Repository             *
+       *              Implements User Repository                *
        *********************************************************/
         public UserRepository(
             AppDbContext context,
@@ -45,10 +45,12 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Core.Repositories
 
                 if(existingUser == null)
                     return await Insert(entity);
-
+                existingUser.Age       = entity.Age;
                 existingUser.FirstName = entity.FirstName;
-                existingUser.LastName = entity.LastName;
-                existingUser.Email = entity.Email;
+                existingUser.LastName  = entity.LastName;
+                existingUser.Address   = entity.Address;
+                existingUser.Email     = entity.Email;
+                existingUser.Assets    = entity.Assets;
 
                 return true;
             }
