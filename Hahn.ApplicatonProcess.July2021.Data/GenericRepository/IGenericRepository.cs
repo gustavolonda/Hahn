@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Web;
 
 namespace Hahn.ApplicatonProcess.July2021.Data.GenericRepository
 {
     /********************************************************
     *              Interface Generic Repository             *
     *********************************************************/
-    public interface IGenericRepository<TEntity> where TEntity : class
+    public interface IGenericRepository<T> where T : class
     {        
-        IEnumerable<TEntity> GetAll();
-        TEntity GetById(object id);
-        void Insert(TEntity obj);
-        void Update(TEntity obj);
-        void Delete(object obj);        
+        Task<IEnumerable<T>> GetAll();
+        Task<T> GetById(object id);
+        Task<bool> Insert(T obj);
+        Task<bool> Update(T obj);
+        Task<bool> Delete(object obj);        
     }
 }

@@ -6,56 +6,51 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace Hahn.ApplicatonProcess.July2021.Data.GenericRepository
 {
-    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {  /********************************************************
        *              Implements Generic Repository             *
        *********************************************************/
         internal AppDbContext context;
-        internal DbSet<TEntity> dbSet;
+        protected readonly ILogger logger;
+        internal DbSet<T> dbSet;
         // Init
-        public GenericRepository(AppDbContext context)
+        public GenericRepository(AppDbContext context, ILogger logger)
         {
             this.context = context;
-            this.dbSet = context.Set<TEntity>();
+            this.logger  = logger;
+            this.dbSet   = context.Set<T>();
         }   
         // Get ALL     
-        public virtual IEnumerable<TEntity> GetAll()
+        public virtual async Task<IEnumerable<T>> GetAll()
         {
-            return dbSet.ToList();
+            return await dbSet.ToListAsync();
         }
         // Get By Id
-        public virtual TEntity GetById(object id)
+        public virtual async Task<T> GetById(object id)
         {
-            return dbSet.Find(id);
+            return await dbSet.FindAsync(id);
         }           
         // Insert     
-        public virtual void Insert(TEntity entity)
+        public virtual async Task<bool> Insert(T entity)
         {
-            dbSet.Add(entity);
+            await dbSet.AddAsync(entity);
+            return true;
         }
         // Delete by Id
-        public virtual void Delete(object id)
+        public virtual Task<bool> Delete(object id)
         {
-            TEntity entityToDelete = dbSet.Find(id);
-            Delete(entityToDelete);
+            throw new NotImplementedException();
         }
-        // Delete by Entity
-        public virtual void Delete(TEntity entityToDelete)
-        {
-            if (context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                dbSet.Attach(entityToDelete);
-            }
-            dbSet.Remove(entityToDelete);
-        }
+    
         // Update Entity
-        public virtual void Update(TEntity entityToUpdate)
+        public virtual Task<bool> Update(T entityToUpdate)
         {
-            dbSet.Attach(entityToUpdate);
-            context.Entry(entityToUpdate).State = EntityState.Modified;
+            throw new NotImplementedException();
         }        
     }
 }
