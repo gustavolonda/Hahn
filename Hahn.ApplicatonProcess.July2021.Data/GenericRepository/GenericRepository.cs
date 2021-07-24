@@ -28,18 +28,38 @@ namespace Hahn.ApplicatonProcess.July2021.Data.GenericRepository
         // Get ALL     
         public virtual async Task<IEnumerable<T>> GetAll()
         {
-            return await dbSet.ToListAsync();
+             try
+            {
+                return await dbSet.ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                this.logger.LogError(ex, "{Repo}Repository Upsert method error", typeof(T));
+                return new List<T>();
+            }
         }
         // Get By Id
         public virtual async Task<T> GetById(int id)
         {
-            return await dbSet.FindAsync(id);
+       
+                return await dbSet.FindAsync(id);
+            
         }           
         // Insert     
         public virtual async Task<bool> Insert(T entity)
         {
-            await dbSet.AddAsync(entity);
-            return true;
+            
+            try
+            {
+                await dbSet.AddAsync(entity);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                this.logger.LogError(ex, "{Repo}Repository Upsert method error", typeof(T));
+                return false;
+                
+            }
         }
         // Delete by Id
         public virtual Task<bool> Delete(int id)
