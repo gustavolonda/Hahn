@@ -15,29 +15,34 @@ namespace Hahn.ApplicatonProcess.July2021.Data.GenericRepository
        *********************************************************/
         internal AppDbContext context;
         internal DbSet<TEntity> dbSet;
-
+        // Init
         public GenericRepository(AppDbContext context)
         {
             this.context = context;
             this.dbSet = context.Set<TEntity>();
-        }        
+        }   
+        // Get ALL     
         public virtual IEnumerable<TEntity> GetAll()
         {
             return dbSet.ToList();
         }
+        // Get By Id
         public virtual TEntity GetById(object id)
         {
             return dbSet.Find(id);
-        }                
+        }           
+        // Insert     
         public virtual void Insert(TEntity entity)
         {
             dbSet.Add(entity);
         }
+        // Delete by Id
         public virtual void Delete(object id)
         {
             TEntity entityToDelete = dbSet.Find(id);
             Delete(entityToDelete);
         }
+        // Delete by Entity
         public virtual void Delete(TEntity entityToDelete)
         {
             if (context.Entry(entityToDelete).State == EntityState.Detached)
@@ -46,6 +51,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.GenericRepository
             }
             dbSet.Remove(entityToDelete);
         }
+        // Update Entity
         public virtual void Update(TEntity entityToUpdate)
         {
             dbSet.Attach(entityToUpdate);
