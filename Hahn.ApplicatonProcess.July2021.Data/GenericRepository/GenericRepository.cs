@@ -31,7 +31,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.GenericRepository
             return await dbSet.ToListAsync();
         }
         // Get By Id
-        public virtual async Task<T> GetById(object id)
+        public virtual async Task<T> GetById(int id)
         {
             return await dbSet.FindAsync(id);
         }           
@@ -42,7 +42,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.GenericRepository
             return true;
         }
         // Delete by Id
-        public virtual Task<bool> Delete(object id)
+        public virtual Task<bool> Delete(int id)
         {
             throw new NotImplementedException();
         }
