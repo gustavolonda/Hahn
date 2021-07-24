@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using  Hahn.ApplicatonProcess.July2021.Data.Repository;
-using  Hahn.ApplicatonProcess.July2021.Data.Models;
+using  Hahn.ApplicatonProcess.July2021.Domain.Models;
 using  Hahn.ApplicatonProcess.July2021.Data.GenericRepository;
 using  Hahn.ApplicatonProcess.July2021.Data.DataAccess;
 namespace Hahn.ApplicatonProcess.July2021.Data.Core.Repositories

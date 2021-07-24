@@ -7,7 +7,7 @@ using System.Web;
 
 using System.Threading;
 
-namespace Hahn.ApplicatonProcess.July2021.Data.Models
+namespace Hahn.ApplicatonProcess.July2021.Domain.Models
 { 
     /********************************************************
     *                       User Model                      *

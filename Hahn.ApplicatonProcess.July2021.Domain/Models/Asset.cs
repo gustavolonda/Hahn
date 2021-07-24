@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using System.Threading;
-namespace Hahn.ApplicatonProcess.July2021.Data.Models
+namespace Hahn.ApplicatonProcess.July2021.Domain.Models
 { 
     /********************************************************
     *                       Asset Model                      *
