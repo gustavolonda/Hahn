@@ -53,7 +53,7 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
         public async Task<ActionResult<object>> PutUser(int id, User user)
         {
             UserValidator userValidator = new UserValidator();
-            ResponseResultValidator resultValidator = userValidator.UserCheckErrorExists(user);
+            ResponseResultValidator resultValidator = userValidator.CheckErrorExists(user,userValidator);
             if(resultValidator.IsError)
                return resultValidator;
         
@@ -88,7 +88,7 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
         public async Task<ActionResult<object>> PostUser(User user)
         {
             UserValidator userValidator = new UserValidator();
-            ResponseResultValidator resultValidator = userValidator.UserCheckErrorExists(user);
+            ResponseResultValidator resultValidator = userValidator.CheckErrorExists(user,userValidator);
             if(resultValidator.IsError)
                 return resultValidator;
             if (_unitOfWork.UserRepository.EmailExists(user.Email)){
