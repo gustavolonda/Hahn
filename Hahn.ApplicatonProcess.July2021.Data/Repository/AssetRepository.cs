@@ -22,20 +22,6 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Core.Repositories
         {
             
         }
-        public override async Task<Asset> GetById(int id)
-        {
-             try
-            {
-                return await dbSet.FindAsync(id);
-            }
-            catch(Exception ex)
-            {
-                this.logger.LogError(ex,  "{Repo} Upsert method error", typeof(AssetRepository));
-                return new Asset();
-                
-            }
-            
-        } 
         public override async Task<bool> Update(Asset entity)
         {
             try
