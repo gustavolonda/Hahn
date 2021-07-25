@@ -41,8 +41,16 @@ namespace Hahn.ApplicatonProcess.July2021.Data.GenericRepository
         // Get By Id
         public virtual async Task<T> GetById(int id)
         {
-       
+             try
+            {
                 return await dbSet.FindAsync(id);
+            }
+            catch(Exception ex)
+            {
+                this.logger.LogError(ex,  "{Repo}Repository Upsert method error", typeof(T));
+                return null;
+                
+            }
             
         }           
         // Insert     
