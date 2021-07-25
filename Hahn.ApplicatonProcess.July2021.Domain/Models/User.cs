@@ -21,10 +21,8 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Models
         public string Address { get; set; }
         public string Email { get; set; }
         public List<Asset> Assets { get; set; }
-        public static int globalUserID;
         public User(){
             
-            this.Id        = Interlocked.Increment(ref globalUserID);
             this.Age       = 0;
             this.FirstName = "";      
             this.LastName  = "";       
