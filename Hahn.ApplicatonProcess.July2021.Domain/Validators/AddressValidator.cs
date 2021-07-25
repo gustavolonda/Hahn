@@ -12,9 +12,9 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Validators
      public class AddressValidator: GenericValidator<Address>
     {   
         public AddressValidator(){
-            RuleFor(x=>x.PostatCode).Empty().WithMessage("Please specify a postcode");
-            RuleFor(x=>x.Street).Empty().WithMessage("Please specify a street");
-            RuleFor(x=>x.HouseNumber).MinimumLength(3).WithMessage("Please specify a house number");
+            RuleFor(x=>x.PostatCode).NotEmpty().WithMessage("Please specify a postcode");
+            RuleFor(x=>x.Street).NotEmpty().WithMessage("Please specify a street");
+            RuleFor(x=>x.HouseNumber).NotEmpty().WithMessage("Please specify a house number");
 
 
         }
