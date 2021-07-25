@@ -12,10 +12,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using  Hahn.ApplicatonProcess.July2021.Data.DataAccess;
+using Microsoft.EntityFrameworkCore;
 namespace Hahn.ApplicatonProcess.July2021.Web
-{
+{   /********************************************************
+    *                       Startup                         *
+    *********************************************************/
     public class Startup
-    {
+    {   
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,7 +29,8 @@ namespace Hahn.ApplicatonProcess.July2021.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase(databaseName: "Hahn_July"));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
