@@ -52,10 +52,16 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<object>> PutUser(int id, User user)
         {
+            // User Validator
             UserValidator userValidator = new UserValidator();
             ResponseResultValidator resultValidator = userValidator.CheckErrorExists(user,userValidator);
             if(resultValidator.IsError)
                return resultValidator;
+            // Address Validator
+            AddressValidator addresValidator = new AddressValidator();
+            ResponseResultValidator resultAddressValidator = addresValidator.CheckErrorExists(user.Address,addresValidator);
+            if(resultAddressValidator.IsError)
+               return resultAddressValidator;
         
             if (id != user.Id)
             {
@@ -91,6 +97,12 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
             ResponseResultValidator resultValidator = userValidator.CheckErrorExists(user,userValidator);
             if(resultValidator.IsError)
                 return resultValidator;
+            // Address Validator
+            AddressValidator addresValidator = new AddressValidator();
+            ResponseResultValidator resultAddressValidator = addresValidator.CheckErrorExists(user.Address,addresValidator);
+            if(resultAddressValidator.IsError)
+               return resultAddressValidator;
+               
             if (_unitOfWork.UserRepository.EmailExists(user.Email)){
                 resultValidator = new ResponseResultValidator();
                 resultValidator.IsError = true;
