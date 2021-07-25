@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hahn.ApplicatonProcess.July2021.Domain.Models;
 using Hahn.ApplicatonProcess.July2021.Data.DataAccess;
-
+using Hahn.ApplicatonProcess.July2021.Domain.Validators;
 namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
 {
      /********************************************************
@@ -48,8 +48,16 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        public async Task<ActionResult<object>> PutUser(int id, User user)
         {
+            UserValidator userValidator = new UserValidator();
+            ResponseResultValidator resultValidator = userValidator.UserCheckErrorExists(user);
+            if(resultValidator.IsError)
+               return resultValidator;
+        
+
+               
+        
             if (id != user.Id)
             {
                 return BadRequest();
@@ -60,6 +68,7 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                 return CreatedAtAction("GetUser", new { id = user.Id }, id);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,8 +87,20 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
 
         // POST: api/user
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<object>> PostUser(User user)
         {
+            UserValidator userValidator = new UserValidator();
+            ResponseResultValidator resultValidator = userValidator.UserCheckErrorExists(user);
+            if(resultValidator.IsError)
+                return resultValidator;
+            if (EmailExists(user.Email)){
+                resultValidator = new ResponseResultValidator();
+                resultValidator.IsError = true;
+                resultValidator.ErrorMessages.Add("Email Exist");
+                return resultValidator;
+
+            }
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
@@ -101,10 +122,15 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
 
             return user;
         }
-
+        // User Exists
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.Id == id);
+        }
+        // Email Exists
+        private bool EmailExists(string email)
+        {
+            return _context.Users.Any(e => e.Email == email);
         }
     }
 }
