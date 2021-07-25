@@ -18,15 +18,16 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Models
         public int Age { get; set; }       
         public string FirstName { get; set; }       
         public string LastName { get; set; }       
-        public string Address { get; set; }
+        public Address Address { get; set; }
         public string Email { get; set; }
         public List<Asset> Assets { get; set; }
+        // Contructor
         public User(){
             
             this.Age       = 0;
             this.FirstName = "";      
             this.LastName  = "";       
-            this.Address   = "";
+            this.Address   = new Address();
             this.Email     = "";
             this.Assets    = new List<Asset> ();
         }
