@@ -9,16 +9,16 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Validators
     /********************************************************
     *                       User Validator                   *
     *********************************************************/
-     public class UserValidator: GenericValidator<User>
+     public class AddressValidator: GenericValidator<Adress>
     {   
-        public UserValidator(){
-            RuleFor(x=>x.Age).GreaterThan(18).WithMessage("Must be over 18 years old");
-            RuleFor(x=>x.FirstName).MinimumLength(3).WithMessage("At least 3 characters");
-            RuleFor(x=>x.LastName).MinimumLength(3).WithMessage("At least 3 characters");
-            RuleFor(x=>x.Email).EmailAddress().WithMessage("Invaded email");
+        public AddressValidator(){
+            RuleFor(x=>x.PostatCode).Empty().WithMessage("Please specify a postcode");
+            RuleFor(x=>x.Street).Empty().WithMessage("Please specify a street");
+            RuleFor(x=>x.HouseNumber).MinimumLength(3).WithMessage("Please specify a house number");
+
 
         }
-    
+        // Check that the user exists Error
 
     }
  }
