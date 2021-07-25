@@ -36,6 +36,8 @@ namespace Hahn.ApplicatonProcess.July2021.Web
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hahn.ApplicatonProcess.July2021.Web", Version = "v1" });
             });
+            // Adding the Unit of work to the DI container
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         }
 

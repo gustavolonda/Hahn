@@ -18,25 +18,27 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private IUnitOfWork _unitOfWork;
 
-        public UsersController(AppDbContext context)
+        public UsersController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
         // GetAllUsers
         // GET: api/users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+
         {
-            return await _context.Users.ToListAsync();
+            var result = await _unitOfWork.UserRepository.GetAll();
+            return new ActionResult<IEnumerable<User>> (result);
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _unitOfWork.UserRepository.GetById(id);
 
             if (user == null)
             {
@@ -55,24 +57,20 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
             if(resultValidator.IsError)
                return resultValidator;
         
-
-               
-        
             if (id != user.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+               bool isUpdate = await _unitOfWork.UserRepository.Update(user);
+               _unitOfWork.Save();
                  return CreatedAtAction("GetUser", new { id = user.Id }, id);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!_unitOfWork.UserRepository.UserExists(id))
                 {
                     return NotFound();
                 }
@@ -93,7 +91,7 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
             ResponseResultValidator resultValidator = userValidator.UserCheckErrorExists(user);
             if(resultValidator.IsError)
                 return resultValidator;
-            if (EmailExists(user.Email)){
+            if (_unitOfWork.UserRepository.EmailExists(user.Email)){
                 resultValidator = new ResponseResultValidator();
                 resultValidator.IsError = true;
                 resultValidator.ErrorMessages.Add("Email Exist");
@@ -101,8 +99,9 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
 
             }
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+           
+            bool isInsert = await  _unitOfWork.UserRepository.Insert(user);
+             _unitOfWork.Save();
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
@@ -111,26 +110,16 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _unitOfWork.UserRepository.GetById(id);
             if (user == null)
             {
                 return NotFound();
             }
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+             bool isDelete = await _unitOfWork.UserRepository.Delete(id);
+             _unitOfWork.Save();
 
             return user;
         }
-        // User Exists
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.Id == id);
-        }
-        // Email Exists
-        private bool EmailExists(string email)
-        {
-            return _context.Users.Any(e => e.Email == email);
-        }
+    
     }
 }
