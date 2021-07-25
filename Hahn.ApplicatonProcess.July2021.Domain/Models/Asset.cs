@@ -15,10 +15,7 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Models
         public int Id { get; set; }            
         public string Symbol { get; set; }       
         public string Name { get; set; }   
-        public static int globalAssetID;
         public Asset(){
-            
-            this.Id     = Interlocked.Increment(ref globalAssetID);
             this.Symbol = "";      
             this.Name   = "";
 
