@@ -1,4 +1,4 @@
-using Hahn.ApplicatonProcess.July2021.Data.GenericRepository;
+using Hahn.ApplicatonProcess.July2021.Data.Repository;
 using Hahn.ApplicatonProcess.July2021.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -9,8 +9,8 @@ namespace Hahn.ApplicatonProcess.July2021.Data.DataAccess
 {
     public interface IUnitOfWork: IDisposable
     {
-        IGenericRepository<User> UserRepository { get; }
-        IGenericRepository<Asset> AssetRepository { get; }
+        IUserRepository UserRepository { get; }
+        IAssetRepository AssetRepository { get; }
         void Save();
     }
 }

@@ -1,6 +1,7 @@
 using Hahn.ApplicatonProcess.July2021.Data.DataAccess; 
 
 using Hahn.ApplicatonProcess.July2021.Data.GenericRepository;
+using Hahn.ApplicatonProcess.July2021.Data.Repository;
 using Hahn.ApplicatonProcess.July2021.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -17,35 +18,36 @@ namespace Hahn.ApplicatonProcess.July2021.Data.DataAccess
     {
         private AppDbContext _context;
         private readonly ILogger _logger;
-        public IGenericRepository<User> userRepository;
-        public IGenericRepository<Asset> assetRepository;
+        public IUserRepository userRepository;
+        public IAssetRepository assetRepository;
         // Init
-        public UnitOfWork(AppDbContext context)
+        public UnitOfWork(AppDbContext context,ILoggerFactory loggerFactory)
         {
             this._context = context;
+             this._logger  = loggerFactory.CreateLogger("logs");
         
         }
-        public IGenericRepository<User> UserRepository
+        public IUserRepository UserRepository
         {
             get
             {
 
                 if (this.userRepository == null)
                 {
-                    this.userRepository = new GenericRepository<User>(_context, _logger);
+                    this.userRepository = new UserRepository(_context, _logger);
                 }
                 return userRepository;
             }
         }
 
-        public IGenericRepository<Asset> AssetRepository
+        public IAssetRepository AssetRepository
         {
             get
             {
 
                 if (this.assetRepository == null)
                 {
-                    this.assetRepository = new GenericRepository<Asset>(_context, _logger);
+                    this.assetRepository = new AssetRepository(_context, _logger);
                 }
                 return assetRepository;
             }
