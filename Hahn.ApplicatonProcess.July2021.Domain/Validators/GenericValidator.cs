@@ -18,10 +18,8 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Validators
             if(!result.IsValid){
                 responseResultValidator.IsError = true;
                 foreach(var error in result.Errors)
-                    responseResultValidator.ErrorMessages.Add($"{error.PropertyName} : {error.ErrorMessage}");
+                    responseResultValidator.ErrorMessages.Add($"{error.ErrorMessage}");
             }
-
-
             return responseResultValidator;
 
        }
