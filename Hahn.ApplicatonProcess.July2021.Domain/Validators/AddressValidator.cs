@@ -7,9 +7,9 @@ using FluentValidation.Results;
 namespace Hahn.ApplicatonProcess.July2021.Domain.Validators
 { 
     /********************************************************
-    *                       User Validator                   *
+    *                       Address Validator                   *
     *********************************************************/
-     public class AddressValidator: GenericValidator<Adress>
+     public class AddressValidator: GenericValidator<Address>
     {   
         public AddressValidator(){
             RuleFor(x=>x.PostatCode).Empty().WithMessage("Please specify a postcode");
@@ -18,7 +18,6 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Validators
 
 
         }
-        // Check that the user exists Error
 
     }
  }
