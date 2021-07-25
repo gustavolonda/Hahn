@@ -12,5 +12,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Repository
     *********************************************************/
     public interface IUserRepository : IGenericRepository<User>
     {
+         bool UserExists(int id);
+         bool EmailExists(string email);
     }
 }

@@ -8,7 +8,7 @@ using  Hahn.ApplicatonProcess.July2021.Data.Repository;
 using  Hahn.ApplicatonProcess.July2021.Domain.Models;
 using  Hahn.ApplicatonProcess.July2021.Data.GenericRepository;
 using  Hahn.ApplicatonProcess.July2021.Data.DataAccess;
-namespace Hahn.ApplicatonProcess.July2021.Data.Core.Repositories
+namespace Hahn.ApplicatonProcess.July2021.Data.Repository
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
@@ -22,20 +22,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Core.Repositories
         {
             
         }
-        public override async Task<User> GetById(int id)
-        {
-             try
-            {
-                return await dbSet.FindAsync(id);
-            }
-            catch(Exception ex)
-            {
-                this.logger.LogError(ex,  "{Repo} Upsert method error", typeof(UserRepository));
-                return new User();
-                
-            }
-            
-        } 
+        
         public override async Task<bool> Update(User entity)
         {
             try
@@ -82,5 +69,14 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Core.Repositories
                 return false;
             }
         }
+        public  bool UserExists(int id)
+        {
+            return   dbSet.Any(e => e.Id == id);
+        }
+        public  bool EmailExists(string email)
+        {
+            return   dbSet.Any(e => e.Email == email);
+        }
     }
+    
 }
