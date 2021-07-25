@@ -16,5 +16,6 @@ namespace Hahn.ApplicatonProcess.July2021.Data.DataAccess
 
         public DbSet<User> Users { get; set; }
         public DbSet<Asset> Assets { get; set; }
+        public DbSet<Address> Addresses { get; set; }
     }
 }
