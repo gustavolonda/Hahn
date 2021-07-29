@@ -17,10 +17,11 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Models
         public int Id { get; set; }        
         public int Age { get; set; }       
         public string FirstName { get; set; }       
-        public string LastName { get; set; }       
-        public Address Address { get; set; }
+        public string LastName { get; set; }    
+        public int AddressId { get; set; }   
+        public virtual  Address Address { get; set; }
         public string Email { get; set; }
-        public List<Asset> Assets { get; set; }
+         public  List<Asset> Assets { get; set; }
         // Contructor
         public User(){
             

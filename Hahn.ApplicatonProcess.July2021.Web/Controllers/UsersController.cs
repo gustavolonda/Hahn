@@ -44,9 +44,11 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
             {
                 return NotFound();
             }
+            user.Address = await _unitOfWork.AddressRepository.GetById(user.AddressId);    
 
             return user;
         }
+
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
@@ -55,24 +57,35 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
             // User Validator
             UserValidator userValidator = new UserValidator();
             ResponseResultValidator resultValidator = userValidator.CheckErrorExists(user,userValidator);
-            if(resultValidator.IsError)
-               return resultValidator;
+            if(resultValidator.IsError){
+                Response.StatusCode = 400;
+                 return resultValidator;
+            }
+              
+
             // Address Validator
             AddressValidator addresValidator = new AddressValidator();
             ResponseResultValidator resultAddressValidator = addresValidator.CheckErrorExists(user.Address,addresValidator);
-            if(resultAddressValidator.IsError)
-               return resultAddressValidator;
+            if(resultAddressValidator.IsError){
+                Response.StatusCode = 400;
+                 return resultAddressValidator;
+            }
+              
+          
+
         
             if (id != user.Id)
             {
+
                 return BadRequest();
             }
 
             try
             {
                bool isUpdate = await _unitOfWork.UserRepository.Update(user);
-               _unitOfWork.Save();
-                 return CreatedAtAction("GetUser", new { id = user.Id }, id);
+               if(isUpdate)
+                _unitOfWork.Save();
+                 return CreatedAtAction("GetUser", new { id = user.Id }, user);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -85,8 +98,6 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         // POST: api/user
@@ -95,25 +106,37 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
         {
             UserValidator userValidator = new UserValidator();
             ResponseResultValidator resultValidator = userValidator.CheckErrorExists(user,userValidator);
-            if(resultValidator.IsError)
-                return resultValidator;
+            if(resultValidator.IsError){
+                Response.StatusCode = 400;
+                 return resultValidator;
+            }
             // Address Validator
             AddressValidator addresValidator = new AddressValidator();
             ResponseResultValidator resultAddressValidator = addresValidator.CheckErrorExists(user.Address,addresValidator);
-            if(resultAddressValidator.IsError)
-               return resultAddressValidator;
-               
+            if(resultAddressValidator.IsError){
+                Response.StatusCode = 400;
+                 return resultAddressValidator;
+            }
+
+              
+            // Check Email Exists
             if (_unitOfWork.UserRepository.EmailExists(user.Email)){
                 resultValidator = new ResponseResultValidator();
                 resultValidator.IsError = true;
+                Response.StatusCode = 400;
                 resultValidator.ErrorMessages.Add("Email Exist");
                 return resultValidator;
 
             }
+               
 
-           
-            bool isInsert = await  _unitOfWork.UserRepository.Insert(user);
+           //bool isAddressInsert =  await  _unitOfWork.AddressRepository.Insert(user.Address);
+           //if(isAddressInsert)
+           {
+               bool isInsert = await  _unitOfWork.UserRepository.Insert(user);
              _unitOfWork.Save();
+           }
+            
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
