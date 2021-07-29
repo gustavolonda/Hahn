@@ -36,13 +36,17 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<object>> GetUser(int id)
         {
             var user = await _unitOfWork.UserRepository.GetById(id);
 
             if (user == null)
             {
-                return NotFound();
+                   ResponseResultValidator resultValidator = new ResponseResultValidator();
+                    resultValidator.IsError = true;
+                    Response.StatusCode = 400;
+                    resultValidator.ErrorMessages.Add("User Not Exist");
+                    return resultValidator;
             }
             user.Address = await _unitOfWork.AddressRepository.GetById(user.AddressId);    
 
@@ -91,7 +95,11 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
             {
                 if (!_unitOfWork.UserRepository.UserExists(id))
                 {
-                    return NotFound();
+                    resultValidator = new ResponseResultValidator();
+                    resultValidator.IsError = true;
+                    Response.StatusCode = 400;
+                    resultValidator.ErrorMessages.Add("User Not Exist");
+                    return resultValidator;
                 }
                 else
                 {
@@ -143,17 +151,21 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> DeleteUser(int id)
+        public async Task<ActionResult<object>> DeleteUser(int id)
         {
             var user = await _unitOfWork.UserRepository.GetById(id);
             if (user == null)
             {
-                return NotFound();
+                ResponseResultValidator resultValidator = new ResponseResultValidator();
+                resultValidator.IsError = true;
+                Response.StatusCode = 400;
+                resultValidator.ErrorMessages.Add("User Not Exist");
+                return resultValidator;
             }
              bool isDelete = await _unitOfWork.UserRepository.Delete(id);
              _unitOfWork.Save();
 
-            return user;
+            return true;
         }
     
     }
