@@ -5,14 +5,19 @@
      /********************************************************
     *               Response Result Validator                *
     *********************************************************/
-     public class ResponseResultValidator
-    {                
-        public bool IsError { get; set; }       
+     public class ResponseResult
+    {                  
         public List<string> ErrorMessages { get; set; }   
-        public ResponseResultValidator(){
-            
-            this.IsError       = false;      
+        public string ResultStatus { get; set; }   
+        public string ResultMessage { get; set;} 
+        public object Response { get; set; }  
+
+        public ResponseResult(){   
             this.ErrorMessages = new List<string>();
+            this.ResultStatus  = "";
+            this.ResultMessage = "";
+            this.Response = "";
+
         }    
     }
 
