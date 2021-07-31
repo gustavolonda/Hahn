@@ -12,15 +12,15 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Validators
        *              Implements Generic Validator             *
        *********************************************************/
         // Check Exists Error
-       public ResponseResultValidator CheckErrorExists(T obj, AbstractValidator<T> validator){
-           var responseResultValidator = new ResponseResultValidator();
+       public ResponseResult CheckErrorExists(T obj, AbstractValidator<T> validator){
+           var responseResult = new ResponseResult();
             var result = validator.Validate(obj);
             if(!result.IsValid){
-                responseResultValidator.IsError = true;
+                responseResult.ResultStatus = ResponseResultStatusDomain.ERROR;
                 foreach(var error in result.Errors)
-                    responseResultValidator.ErrorMessages.Add($"{error.ErrorMessage}");
+                    responseResult.ErrorMessages.Add($"{error.ErrorMessage}");
             }
-            return responseResultValidator;
+            return responseResult;
 
        }
     }

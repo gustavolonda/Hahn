@@ -13,6 +13,6 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Validators
     *********************************************************/
     public interface IGenericValidator<T> where T : class
     {        
-        ResponseResultValidator CheckErrorExists(T obj, AbstractValidator<T> validator);
+        ResponseResult CheckErrorExists(T obj, AbstractValidator<T> validator);
     }
 }

@@ -17,9 +17,10 @@ namespace Hahn.ApplicatonProcess.July2021.Data.DataAccess
     public class UnitOfWork : IUnitOfWork
     {
         private AppDbContext _context;
-        private readonly ILogger _logger;
+        public readonly ILogger _logger;
         public IUserRepository userRepository;
         public IAssetRepository assetRepository;
+        public IAddressRepository addressRepository; 
         // Init
         public UnitOfWork(AppDbContext context,ILoggerFactory loggerFactory)
         {
@@ -52,10 +53,31 @@ namespace Hahn.ApplicatonProcess.July2021.Data.DataAccess
                 return assetRepository;
             }
         }
+        public IAddressRepository AddressRepository 
+        {
+            get
+            {
+
+                if (this.addressRepository == null)
+                {
+                    this.addressRepository = new AddressRepository(_context, _logger);
+                }
+                return addressRepository;
+            }
+        }
+         
+        public ILogger Logger
+        {
+            get
+            {
+                return _logger;
+            }
+        }
+
 
         public void Save()
         {
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
 
         public void Dispose()

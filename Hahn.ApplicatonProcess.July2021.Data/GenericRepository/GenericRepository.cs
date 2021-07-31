@@ -39,7 +39,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.GenericRepository
             }
         }
         // Get By Id
-        public virtual async Task<T> GetById(int id)
+        public virtual async Task<T> GetById(object id)
         {
              try
             {
@@ -70,7 +70,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.GenericRepository
             }
         }
         // Delete by Id
-        public virtual Task<bool> Delete(int id)
+        public virtual Task<bool> Delete(object id)
         {
             throw new NotImplementedException();
         }
