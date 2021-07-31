@@ -21,6 +21,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.DataAccess
         public IUserRepository userRepository;
         public IAssetRepository assetRepository;
         public IAddressRepository addressRepository; 
+        public IUserAssetRepository userAssetRepository;
         // Init
         public UnitOfWork(AppDbContext context,ILoggerFactory loggerFactory)
         {
@@ -63,6 +64,19 @@ namespace Hahn.ApplicatonProcess.July2021.Data.DataAccess
                     this.addressRepository = new AddressRepository(_context, _logger);
                 }
                 return addressRepository;
+            }
+        }
+
+        public IUserAssetRepository UserAssetRepository
+        {
+            get
+            {
+
+                if (this.userAssetRepository == null)
+                {
+                    this.userAssetRepository = new UserAssetRepository(_context, _logger);
+                }
+                return  this.userAssetRepository;
             }
         }
          

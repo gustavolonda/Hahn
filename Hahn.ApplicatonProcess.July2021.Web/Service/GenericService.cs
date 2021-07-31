@@ -15,6 +15,8 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Service
     {  /********************************************************
        *              Implements Generic Service             *
        *********************************************************/
+       public const string FINISHED_SUCCESSFULLY = "Finished successfully";
+       public const string ERROR_OCURRED         = "Error occurred";
        public IUnitOfWork _unitOfWork;
         // Init
         public GenericService(IUnitOfWork unitOfWork)

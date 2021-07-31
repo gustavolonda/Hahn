@@ -12,6 +12,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.DataAccess
         IUserRepository UserRepository { get; }
         IAssetRepository AssetRepository { get; }
         IAddressRepository AddressRepository { get; }
+        IUserAssetRepository UserAssetRepository { get; }
         ILogger Logger { get; }
         void Save();
     }
