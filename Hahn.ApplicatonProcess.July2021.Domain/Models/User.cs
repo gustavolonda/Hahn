@@ -21,7 +21,7 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Models
         public int AddressId { get; set; }   
         public virtual  Address Address { get; set; }
         public string Email { get; set; }
-         public  List<Asset> Assets { get; set; }
+         public  List<UserAsset> UserAssets { get; set; }
         // Contructor
         public User(){
             
@@ -30,7 +30,7 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Models
             this.LastName  = "";       
             this.Address   = new Address();
             this.Email     = "";
-            this.Assets    = new List<Asset> ();
+            this.UserAssets    = new List<UserAsset> ();
         }
     }
 }

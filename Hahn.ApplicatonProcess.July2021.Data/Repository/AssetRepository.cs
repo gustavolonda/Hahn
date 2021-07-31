@@ -13,7 +13,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Repository
     public class AssetRepository : GenericRepository<Asset>, IAssetRepository
     {
         /********************************************************
-       *              Implements User Repository                *
+       *              Implements Asset Repository                *
        *********************************************************/
         public AssetRepository(
             AppDbContext context,
@@ -34,7 +34,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Repository
 
                 existingAsset.Symbol = entity.Symbol;
                 existingAsset.Name   = entity.Name;
-
+                
                 return true;
             }
             catch(Exception ex)
@@ -44,11 +44,11 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Repository
             }
         }
 
-        public override async Task<bool> Delete(int id)
+        public override async Task<bool> Delete(object id)
         {
             try
-            {
-                var exist = await dbSet.Where(x => x.Id == id)
+            {  
+                var exist = await dbSet.Where(x => x.Id == id.ToString())
                                     .FirstOrDefaultAsync();
 
                 if(exist != null)
@@ -64,6 +64,11 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Repository
                  this.logger.LogError(ex, "{Repo} Delete method error", typeof(AssetRepository));
                 return false;
             }
+        }
+
+        public  bool AssetExists(string id)
+        {
+            return   dbSet.Any(e => e.Id == id);
         }
     }
 }

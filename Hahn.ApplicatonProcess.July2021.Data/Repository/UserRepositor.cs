@@ -37,7 +37,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Repository
                 existingUser.LastName  = entity.LastName;
                 existingUser.Address   = entity.Address;
                 existingUser.Email     = entity.Email;
-                existingUser.Assets    = entity.Assets;
+                existingUser.UserAssets    = entity.UserAssets;
     
 
                 return true;

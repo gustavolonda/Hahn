@@ -12,15 +12,13 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Service
     public class UserService : GenericService<User>, IUserService
     {
         /********************************************************
-       *              Implements User Repository                *
+       *              Implements User Service                   *
        *********************************************************/
         public UserService(
             IUnitOfWork unitOfWork) : base(unitOfWork)
         {
             
         }
-        private const string FINISHED_SUCCESSFULLY = "Finished successfully";
-        private const string ERROR_OCURRED = "Error occurred";
         private const string USER_NOT_EXIST = "User not exist";
         public override async Task<ResponseResult> GetById(object id){
             var user = await _unitOfWork.UserRepository.GetById(id);
@@ -91,6 +89,8 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Service
                 responseResult = await  GetById(id);
                 if(responseResult.ResultStatus.Equals(ResponseResultStatusDomain.ERROR))
                     return responseResult;
+                bool isDelete = await _unitOfWork.UserRepository.Delete(id);
+                _unitOfWork.Save();
 
             }
             catch (DbUpdateConcurrencyException)
@@ -101,10 +101,6 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Service
                 return responseResult;
             }
            
-            
-          
-             bool isDelete = await _unitOfWork.UserRepository.Delete(id);
-             _unitOfWork.Save();
              responseResult = new ResponseResult();
             responseResult.ResultStatus = ResponseResultStatusDomain.OK;
             responseResult.ResultMessage = FINISHED_SUCCESSFULLY;

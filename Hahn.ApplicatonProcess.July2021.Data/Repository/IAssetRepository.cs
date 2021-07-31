@@ -11,6 +11,6 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Repository
     *              Interface Asset Repository                *
     *********************************************************/
     public interface IAssetRepository : IGenericRepository<Asset>
-    {
+    {   bool AssetExists(string id);
     }
 }

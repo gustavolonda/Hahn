@@ -4,10 +4,10 @@ using System;
 
 namespace Hahn.ApplicatonProcess.July2021.Web.Service
 {    /********************************************************
-    *                 Interface User Service                 *
+    *                 Interface Asset Service                *
     *********************************************************/
-    public interface IUserService : IGenericService<User>
+    public interface IAssetService : IGenericService<Asset>
     {
-        ResponseResult validador(User user, bool isInsert, int idWhereUpdate);
+     
     }
 }
