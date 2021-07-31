@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using  Hahn.ApplicatonProcess.July2021.Data.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 namespace Hahn.ApplicatonProcess.July2021.Web
 {   /********************************************************
     *                       Startup                         *
@@ -31,7 +32,9 @@ namespace Hahn.ApplicatonProcess.July2021.Web
         {
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase(databaseName: "Hahn_July"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hahn.ApplicatonProcess.July2021.Web", Version = "v1" });

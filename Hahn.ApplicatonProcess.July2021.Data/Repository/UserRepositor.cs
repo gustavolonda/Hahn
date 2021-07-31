@@ -31,13 +31,14 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Repository
                                                         .FirstOrDefaultAsync();
 
                 if(existingUser == null)
-                    return await Insert(entity);
+                    return false;
                 existingUser.Age       = entity.Age;
                 existingUser.FirstName = entity.FirstName;
                 existingUser.LastName  = entity.LastName;
                 existingUser.Address   = entity.Address;
                 existingUser.Email     = entity.Email;
                 existingUser.Assets    = entity.Assets;
+    
 
                 return true;
             }
@@ -48,11 +49,11 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Repository
             }
         }
 
-        public override async Task<bool> Delete(int id)
+        public override async Task<bool> Delete(object id)
         {
             try
-            {
-                var exist = await dbSet.Where(x => x.Id == id)
+            {   int idInt= int.Parse(id.ToString().Trim()); 
+                var exist = await dbSet.Where(x => x.Id == idInt)
                                     .FirstOrDefaultAsync();
 
                 if(exist != null)
@@ -76,6 +77,10 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Repository
         public  bool EmailExists(string email)
         {
             return   dbSet.Any(e => e.Email == email);
+        }
+        public bool EmailExistsByDiffrentId(int id, string email)
+        {
+            return   dbSet.Any(e => e.Email == email && !(e.Id   == id));
         }
     }
     

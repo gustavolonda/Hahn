@@ -8,9 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Hahn.ApplicatonProcess.July2021.Domain.Models;
 using Hahn.ApplicatonProcess.July2021.Data.DataAccess;
 using Hahn.ApplicatonProcess.July2021.Domain.Validators;
+using Hahn.ApplicatonProcess.July2021.Web.Service;
 namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
 {
-     /********************************************************
+    /********************************************************
     *                     Users Controller                   *
     *********************************************************/
 
@@ -19,153 +20,68 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
     public class UsersController : ControllerBase
     {
         private IUnitOfWork _unitOfWork;
+        private IUserService userService;
 
         public UsersController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-        }
-        // GetAllUsers
-        // GET: api/users
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-
-        {
-            var result = await _unitOfWork.UserRepository.GetAll();
-            return new ActionResult<IEnumerable<User>> (result);
+            userService = new UserService(unitOfWork);
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<object>> GetUser(int id)
+        public async Task<ActionResult<ResponseResult>> GetUser(int id)
         {
-            var user = await _unitOfWork.UserRepository.GetById(id);
-
-            if (user == null)
-            {
-                   ResponseResultValidator resultValidator = new ResponseResultValidator();
-                    resultValidator.IsError = true;
-                    Response.StatusCode = 400;
-                    resultValidator.ErrorMessages.Add("User Not Exist");
-                    return resultValidator;
+            ResponseResult responseResult = await userService.GetById(id);
+            if(responseResult.ResultStatus.Equals(ResponseResultStatusDomain.ERROR)){
+                Response.StatusCode = 400;
+                return responseResult;
             }
-            user.Address = await _unitOfWork.AddressRepository.GetById(user.AddressId);    
-
-            return user;
+            Response.StatusCode = 200;
+            return responseResult;
         }
 
-
-        // PUT: api/Users/5
-        [HttpPut("{id}")]
-        public async Task<ActionResult<object>> PutUser(int id, User user)
-        {
-            // User Validator
-            UserValidator userValidator = new UserValidator();
-            ResponseResultValidator resultValidator = userValidator.CheckErrorExists(user,userValidator);
-            if(resultValidator.IsError){
-                Response.StatusCode = 400;
-                 return resultValidator;
-            }
-              
-
-            // Address Validator
-            AddressValidator addresValidator = new AddressValidator();
-            ResponseResultValidator resultAddressValidator = addresValidator.CheckErrorExists(user.Address,addresValidator);
-            if(resultAddressValidator.IsError){
-                Response.StatusCode = 400;
-                 return resultAddressValidator;
-            }
-              
-          
-
-        
-            if (id != user.Id)
-            {
-
-                return BadRequest();
-            }
-
-            try
-            {
-               bool isUpdate = await _unitOfWork.UserRepository.Update(user);
-               if(isUpdate)
-                _unitOfWork.Save();
-                 return CreatedAtAction("GetUser", new { id = user.Id }, user);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_unitOfWork.UserRepository.UserExists(id))
-                {
-                    resultValidator = new ResponseResultValidator();
-                    resultValidator.IsError = true;
-                    Response.StatusCode = 400;
-                    resultValidator.ErrorMessages.Add("User Not Exist");
-                    return resultValidator;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
 
         // POST: api/user
         [HttpPost]
         public async Task<ActionResult<object>> PostUser(User user)
         {
-            UserValidator userValidator = new UserValidator();
-            ResponseResultValidator resultValidator = userValidator.CheckErrorExists(user,userValidator);
-            if(resultValidator.IsError){
+            ResponseResult responseResult = await userService.Insert(user);
+            if(responseResult.ResultStatus.Equals(ResponseResultStatusDomain.ERROR)){
                 Response.StatusCode = 400;
-                 return resultValidator;
+                return responseResult;
             }
-            // Address Validator
-            AddressValidator addresValidator = new AddressValidator();
-            ResponseResultValidator resultAddressValidator = addresValidator.CheckErrorExists(user.Address,addresValidator);
-            if(resultAddressValidator.IsError){
+                
+            Response.StatusCode = 200;
+            return responseResult;
+        }
+
+        // PUT: api/Users/5
+        [HttpPut("{id}")]
+        public async Task<ActionResult<object>> PutUser(int id, User user)
+        {
+            ResponseResult responseResult = await userService.Update(user, id);
+            if(responseResult.ResultStatus.Equals(ResponseResultStatusDomain.ERROR)){
                 Response.StatusCode = 400;
-                 return resultAddressValidator;
+                return responseResult;
             }
-
-              
-            // Check Email Exists
-            if (_unitOfWork.UserRepository.EmailExists(user.Email)){
-                resultValidator = new ResponseResultValidator();
-                resultValidator.IsError = true;
-                Response.StatusCode = 400;
-                resultValidator.ErrorMessages.Add("Email Exist");
-                return resultValidator;
-
-            }
-               
-
-           //bool isAddressInsert =  await  _unitOfWork.AddressRepository.Insert(user.Address);
-           //if(isAddressInsert)
-           {
-               bool isInsert = await  _unitOfWork.UserRepository.Insert(user);
-             _unitOfWork.Save();
-           }
-            
-
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+                
+            Response.StatusCode = 200;
+            return responseResult;
         }
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<object>> DeleteUser(int id)
+        public async Task<ActionResult<ResponseResult>> DeleteUser(int id)
         {
-            var user = await _unitOfWork.UserRepository.GetById(id);
-            if (user == null)
-            {
-                ResponseResultValidator resultValidator = new ResponseResultValidator();
-                resultValidator.IsError = true;
+            ResponseResult responseResult = await userService.Delete(id);
+            if(responseResult.ResultStatus.Equals(ResponseResultStatusDomain.ERROR)){
                 Response.StatusCode = 400;
-                resultValidator.ErrorMessages.Add("User Not Exist");
-                return resultValidator;
+                return responseResult;
             }
-             bool isDelete = await _unitOfWork.UserRepository.Delete(id);
-             _unitOfWork.Save();
-
-            return true;
+                
+            Response.StatusCode = 200;
+            return responseResult;
         }
     
     }
