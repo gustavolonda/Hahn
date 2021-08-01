@@ -9,48 +9,72 @@ using Hahn.ApplicatonProcess.July2021.Domain.Models;
 using Hahn.ApplicatonProcess.July2021.Data.DataAccess;
 using Hahn.ApplicatonProcess.July2021.Domain.Validators;
 using Hahn.ApplicatonProcess.July2021.Web.Service;
+using Hahn.ApplicatonProcess.July2021.Web.Authorization;
+using AutoMapper;
+using Microsoft.Extensions.Options;
 namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
 {
+    /// <summary>
+        /// Get the source data of each indicator
+        /// </summary>
+        /// <returns></returns>
     /********************************************************
     *                     Users Controller                   *
     *********************************************************/
-
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IUnitOfWork _unitOfWork;
         private IUserService userService;
-
-        public UserController(IUnitOfWork unitOfWork)
+        private IMapper _mapper;
+        private readonly AppSettings _appSettings;
+        public UserController(
+            IUserService userService,
+            IMapper mapper,
+            IOptions<AppSettings> appSettings)
         {
-            _unitOfWork = unitOfWork;
-            userService = new UserService(unitOfWork);
+            this.userService = userService;
+            _mapper = mapper;
+            _appSettings = appSettings.Value;
         }
-
         // GET: api/user/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ResponseResult>> GetUser(int id)
         {
             ResponseResult responseResult = await userService.GetById(id);
-            return this.responseResult(responseResult);
+            responseResult =  userService.responseResult(responseResult);
+            Response.StatusCode = responseResult.StatusCode;
+            return responseResult;
         }
 
-
-        // POST: api/user
-        [HttpPost]
-        public async Task<ActionResult<object>> PostUser(User user)
-        {
-            ResponseResult responseResult = await userService.Insert(user);
-            return this.responseResult(responseResult);
-        }
 
         // PUT: api/user/5
         [HttpPut("{id}")]
         public async Task<ActionResult<object>> PutUser(int id, User user)
         {
             ResponseResult responseResult = await userService.Update(user, id);
-            return this.responseResult(responseResult);
+            responseResult =  userService.responseResult(responseResult);
+            Response.StatusCode = responseResult.StatusCode;
+            return responseResult;
+        }
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<ActionResult<ResponseResult>> PostRegister(RegisterRequest model)
+        {
+            ResponseResult responseResult = await userService.Register(model);
+            responseResult =  userService.responseResult(responseResult);
+            Response.StatusCode = responseResult.StatusCode;
+            return responseResult;
+        }
+        [AllowAnonymous]
+        [HttpPost("authenticate")]
+        public  ActionResult<ResponseResult>  Authenticate(AuthenticateRequest model)
+        {
+            var responseResult = userService.Authenticate(model);
+            responseResult =  userService.responseResult(responseResult);
+            Response.StatusCode = responseResult.StatusCode;
+            return responseResult;
         }
 
         // DELETE: api/user/5
@@ -58,19 +82,14 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
         public async Task<ActionResult<ResponseResult>> DeleteUser(int id)
         {
             ResponseResult responseResult = await userService.Delete(id);
-            return this.responseResult(responseResult);
+            responseResult =  userService.responseResult(responseResult);
+            Response.StatusCode = responseResult.StatusCode;
+            return responseResult;
         }
     
-        public ResponseResult responseResult(ResponseResult responseResult){
-            if(responseResult.ResultStatus.Equals(ResponseResultStatusDomain.ERROR)){
-                Response.StatusCode = 400;
-                return responseResult;
-            }
-                
-            Response.StatusCode = 200;
-            return responseResult;
 
-        }
+
+       
     
     }
 }

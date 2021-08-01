@@ -11,6 +11,7 @@ using Hahn.ApplicatonProcess.July2021.Domain.Validators;
 using Hahn.ApplicatonProcess.July2021.Web.Service;
 namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
 {
+    
     /********************************************************
     *                     Users Controller                   *
     *********************************************************/
@@ -27,22 +28,33 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
             _unitOfWork = unitOfWork;
             addressService = new AddressService(unitOfWork);
         }
+        /// <summary>
+        /// Get the source data of each indicator
+        /// </summary>
+        /// <returns></returns>
 
         // GET: api/address/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ResponseResult>> GetAddress(int id)
         {
             ResponseResult responseResult = await addressService.GetById(id);
-            return this.responseResult(responseResult);
+            responseResult =  addressService.responseResult(responseResult);
+            Response.StatusCode = responseResult.StatusCode;
+            return responseResult;
         }
 
-
+        /// <summary>
+        /// Post the source data of each indicator
+        /// </summary>
+        /// <returns></returns>
         // POST: api/address
         [HttpPost]
         public async Task<ActionResult<ResponseResult>> PostAddress(Address address)
         {
             ResponseResult responseResult = await addressService.Insert(address);
-            return this.responseResult(responseResult);
+            responseResult =  addressService.responseResult(responseResult);
+            Response.StatusCode = responseResult.StatusCode;
+            return responseResult;
         }
 
         // PUT: api/asset/5
@@ -50,7 +62,9 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
         public async Task<ActionResult<ResponseResult>> PutAddress(int id, Address address)
         {
             ResponseResult responseResult = await addressService.Update(address, id);
-            return this.responseResult(responseResult);
+            responseResult =  addressService.responseResult(responseResult);
+            Response.StatusCode = responseResult.StatusCode;
+            return responseResult;
         }
 
         // DELETE: api/asset/5
@@ -58,18 +72,11 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
         public async Task<ActionResult<ResponseResult>> DeleteAddress(int id)
         {
             ResponseResult responseResult = await addressService.Delete(id);
-            return this.responseResult(responseResult);
+            responseResult =  addressService.responseResult(responseResult);
+            Response.StatusCode = responseResult.StatusCode;
+            return responseResult;
         }
     
-        public ResponseResult responseResult(ResponseResult responseResult){
-            if(responseResult.ResultStatus.Equals(ResponseResultStatusDomain.ERROR)){
-                Response.StatusCode = 400;
-                return responseResult;
-            }
-                
-            Response.StatusCode = 200;
-            return responseResult;
-
-        }
+        
     }
 }

@@ -11,6 +11,10 @@ using Hahn.ApplicatonProcess.July2021.Domain.Validators;
 using Hahn.ApplicatonProcess.July2021.Web.Service;
 namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
 {
+    /// <summary>
+        /// Get the source data of each indicator
+        /// </summary>
+        /// <returns></returns>
     /********************************************************
     *                     Asset Controller                   *
     *********************************************************/
@@ -33,7 +37,9 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
         public async Task<ActionResult<ResponseResult>> GetUser(string id)
         {
             ResponseResult responseResult = await assetService.GetById(id);
-            return this.responseResult(responseResult);
+            responseResult =  assetService.responseResult(responseResult);
+            Response.StatusCode = responseResult.StatusCode;
+            return responseResult;
         }
 
 
@@ -42,7 +48,9 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
         public async Task<ActionResult<ResponseResult>> PostAsset(Asset asset)
         {
             ResponseResult responseResult = await assetService.Insert(asset);
-            return this.responseResult(responseResult);
+            responseResult =  assetService.responseResult(responseResult);
+            Response.StatusCode = responseResult.StatusCode;
+            return responseResult;
         }
 
         // PUT: api/asset/5
@@ -50,7 +58,9 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
         public async Task<ActionResult<ResponseResult>> PutAsset(string id, Asset asset)
         {
             ResponseResult responseResult = await assetService.Update(asset, id);
-            return this.responseResult(responseResult);
+            responseResult =  assetService.responseResult(responseResult);
+            Response.StatusCode = responseResult.StatusCode;
+            return responseResult;
         }
 
         // DELETE: api/asset/5
@@ -58,18 +68,9 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
         public async Task<ActionResult<ResponseResult>> DeleteAsset(string id)
         {
             ResponseResult responseResult = await assetService.Delete(id);
-            return this.responseResult(responseResult);
-        }
-    
-        public ResponseResult responseResult(ResponseResult responseResult){
-            if(responseResult.ResultStatus.Equals(ResponseResultStatusDomain.ERROR)){
-                Response.StatusCode = 400;
-                return responseResult;
-            }
-    
-            Response.StatusCode = 200;
+            responseResult =  assetService.responseResult(responseResult);
+            Response.StatusCode = responseResult.StatusCode;
             return responseResult;
-
         }
     
     }

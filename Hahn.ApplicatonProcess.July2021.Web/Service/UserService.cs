@@ -1,12 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using  Hahn.ApplicatonProcess.July2021.Domain.Models;
 using  Hahn.ApplicatonProcess.July2021.Data.DataAccess;
 using Hahn.ApplicatonProcess.July2021.Domain.Validators;
+using Hahn.ApplicatonProcess.July2021.Web.Helper;
+using AutoMapper;
+using BCryptNet = BCrypt.Net.BCrypt;
+using Hahn.ApplicatonProcess.July2021.Web.Authorization;
 namespace Hahn.ApplicatonProcess.July2021.Web.Service
 {
     public class UserService : GenericService<User>, IUserService
@@ -14,9 +15,14 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Service
         /********************************************************
        *              Implements User Service                   *
        *********************************************************/
+       private IJwtUtils _jwtUtils;
+        private readonly IMapper _mapper;
         public UserService(
-            IUnitOfWork unitOfWork) : base(unitOfWork)
+            IUnitOfWork unitOfWork,IJwtUtils jwtUtils,
+            IMapper mapper) : base(unitOfWork)
         {
+            _jwtUtils = jwtUtils;
+            _mapper = mapper;
             
         }
         private const string USER_NOT_EXIST = "User not exist";
@@ -141,7 +147,72 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Service
 
             }
             return null;
-         }        
+         }       
+         public  ResponseResult  Authenticate(AuthenticateRequest model)
+        {
+            var user =  _unitOfWork.UserRepository.GetByUsername(model.Username);
+            ResponseResult responseResult;
+            // validate
+            if (user == null || !BCryptNet.Verify(model.Password, user.Password)){
+                responseResult = new ResponseResult();
+                responseResult.ResultStatus = ResponseResultStatusDomain.ERROR;
+                responseResult.ErrorMessages.Add("Username or password is incorrect");
+                return responseResult;
+
+            }
+            
+            // authentication successful
+            var response = _mapper.Map<AuthenticateResponse>(user);
+            response.JwtToken = _jwtUtils.GenerateToken(user);
+            responseResult = new ResponseResult();
+            responseResult.ResultStatus = ResponseResultStatusDomain.OK;
+            responseResult.ResultMessage = FINISHED_SUCCESSFULLY;
+            responseResult.Response = response;
+            return responseResult;
+        }
+        public  async Task<ResponseResult>  Register(RegisterRequest model)
+        {
+            ResponseResult responseResult;
+            // map model to new user object
+            var user = _mapper.Map<User>(model);
+
+            // Check Username Exist
+            var userExist =   _unitOfWork.UserRepository.GetByUsername(user.Username);
+             if (userExist != null){
+                responseResult = new ResponseResult();
+                responseResult.ResultStatus = ResponseResultStatusDomain.ERROR;
+                responseResult.ErrorMessages.Add("Username Exist");
+                return responseResult;
+
+            }
+
+
+            // hash password
+            user.Password = BCryptNet.HashPassword(model.Password);
+
+
+            // save user
+             responseResult = validador(user, true,0);
+            if(responseResult!=null)
+                return responseResult;
+            try
+            {
+                bool isInsert = await  _unitOfWork.UserRepository.Insert(user);
+                _unitOfWork.Save();
+                responseResult = new ResponseResult();
+                 responseResult.ResultStatus = ResponseResultStatusDomain.OK;
+                responseResult.ResultMessage = FINISHED_SUCCESSFULLY;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                responseResult = new ResponseResult();
+                responseResult.ResultStatus = ResponseResultStatusDomain.ERROR;
+                responseResult.ErrorMessages.Add(ERROR_OCURRED);
+                return responseResult;
+            }
+            return   responseResult;
+        }
+ 
 
     }
     

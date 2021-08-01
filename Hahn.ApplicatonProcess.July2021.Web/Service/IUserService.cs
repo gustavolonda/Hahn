@@ -1,7 +1,5 @@
 using Hahn.ApplicatonProcess.July2021.Domain.Models;
-using Hahn.ApplicatonProcess.July2021.Data.GenericRepository;
-using System;
-
+using System.Threading.Tasks;
 namespace Hahn.ApplicatonProcess.July2021.Web.Service
 {    /********************************************************
     *                 Interface User Service                 *
@@ -9,5 +7,7 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Service
     public interface IUserService : IGenericService<User>
     {
         ResponseResult validador(User user, bool isInsert, int idWhereUpdate);
+        ResponseResult Authenticate(AuthenticateRequest model);
+        Task<ResponseResult>  Register(RegisterRequest model);
     }
 }

@@ -16,6 +16,7 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Service
         Task<ResponseResult> Insert(T obj);   
         Task<ResponseResult> Update(T obj, object idWhereUpdate);
         
-        Task<ResponseResult> Delete(object id);     
+        Task<ResponseResult> Delete(object id);   
+        ResponseResult responseResult(ResponseResult responseResult);  
     }
 }

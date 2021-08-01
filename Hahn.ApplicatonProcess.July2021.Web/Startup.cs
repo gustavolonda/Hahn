@@ -9,11 +9,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using  Hahn.ApplicatonProcess.July2021.Data.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using Hahn.ApplicatonProcess.July2021.Web.Authorization;
+using Hahn.ApplicatonProcess.July2021.Web.Helper;
+using Hahn.ApplicatonProcess.July2021.Web.Service;
+using  Hahn.ApplicatonProcess.July2021.Domain.Models;
+using AutoMapper;
 namespace Hahn.ApplicatonProcess.July2021.Web
 {   /********************************************************
     *                       Startup                         *
@@ -35,31 +39,71 @@ namespace Hahn.ApplicatonProcess.July2021.Web
             services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hahn.ApplicatonProcess.July2021.Web", Version = "v1" });
+                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); //This line
+                
+            
+            
+            
             });
-            // Adding the Unit of work to the DI container
+            services.AddCors();
+            services.AddControllers();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // configure strongly typed settings objects
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
+            // configure DI for application services
+            services.AddScoped<IJwtUtils, JwtUtils>();
+            services.AddScoped<IUserService, UserService>();
+             // Adding the Unit of work to the DI container
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppDbContext dataContext)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hahn.ApplicatonProcess.July2021.Web v1"));
+                 app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hahn.ApplicatonProcess.July2021.Web V1");
+        });
             }
 
-            app.UseHttpsRedirection();
+            app.UseHttpsRedirection();  
+  
+            app.UseRouting();  
+  
+            app.UseAuthentication();  
+            app.UseAuthorization();  
+            
+           //app.UseHttpsRedirection();
 
-            app.UseRouting();
+            //app.UseRouting();
 
-            app.UseAuthorization();
+           //app.UseAuthorization();
+        
 
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
+            // global error handler
+            app.UseMiddleware<ErrorHandlerMiddleware>();
+
+            // custom jwt auth middleware
+            app.UseMiddleware<JwtMiddleware>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

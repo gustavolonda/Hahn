@@ -15,8 +15,8 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Service
     {  /********************************************************
        *              Implements Generic Service             *
        *********************************************************/
-       public const string FINISHED_SUCCESSFULLY = "Finished successfully";
-       public const string ERROR_OCURRED         = "Error occurred";
+       public const string FINISHED_SUCCESSFULLY = "Finished Successfully";
+       public const string ERROR_OCURRED         = "Error Occurred";
        public IUnitOfWork _unitOfWork;
         // Init
         public GenericService(IUnitOfWork unitOfWork)
@@ -46,6 +46,17 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Service
         public virtual Task<ResponseResult> Delete(object id)
         {
             throw new NotImplementedException();
+        }
+
+        public virtual ResponseResult responseResult(ResponseResult responseResult){
+            if(responseResult.ResultStatus.Equals(ResponseResultStatusDomain.ERROR)){
+                responseResult.StatusCode = 400;
+                return responseResult;
+            }
+                
+            responseResult.StatusCode = 200;
+            return responseResult;
+
         }
           
     }

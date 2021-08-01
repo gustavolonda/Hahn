@@ -70,6 +70,11 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Repository
                 return false;
             }
         }
+
+        public  User GetByUsername(string username){
+            var user =  dbSet.SingleOrDefault(x => x.Username == username);
+            return user;
+        }
         public  bool UserExists(int id)
         {
             return   dbSet.Any(e => e.Id == id);
@@ -82,6 +87,7 @@ namespace Hahn.ApplicatonProcess.July2021.Data.Repository
         {
             return   dbSet.Any(e => e.Email == email && !(e.Id   == id));
         }
+
     }
     
 }

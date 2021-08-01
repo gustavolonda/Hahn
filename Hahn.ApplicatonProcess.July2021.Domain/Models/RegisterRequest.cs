@@ -7,7 +7,7 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Models
     /********************************************************
     *                       User Model                      *
     *********************************************************/
-     public class User
+     public class RegisterRequest
     {   
         public int Id { get; set; }     
         public string Username { get; set; }
@@ -19,18 +19,14 @@ namespace Hahn.ApplicatonProcess.July2021.Domain.Models
         public int AddressId { get; set; }   
         public virtual  Address Address { get; set; }
         public string Email { get; set; }
-         public  List<UserAsset> UserAssets { get; set; }
         // Contructor
-        public User(){
-            this.Username  = "";
-            this.Password  = "";
+        public RegisterRequest(){
+            
             this.Age       = 0;
             this.FirstName = "";      
             this.LastName  = "";       
             this.Address   = new Address();
             this.Email     = "";
-            this.UserAssets    = new List<UserAsset> ();
         }
     }
 }
-
