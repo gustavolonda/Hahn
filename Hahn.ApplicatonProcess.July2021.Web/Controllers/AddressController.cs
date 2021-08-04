@@ -28,10 +28,6 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
             _unitOfWork = unitOfWork;
             addressService = new AddressService(unitOfWork);
         }
-        /// <summary>
-        /// Get the source data of each indicator
-        /// </summary>
-        /// <returns></returns>
 
         // GET: api/address/5
         [HttpGet("{id}")]
@@ -43,10 +39,6 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
             return responseResult;
         }
 
-        /// <summary>
-        /// Post the source data of each indicator
-        /// </summary>
-        /// <returns></returns>
         // POST: api/address
         [HttpPost]
         public async Task<ActionResult<ResponseResult>> PostAddress(Address address)

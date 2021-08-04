@@ -14,10 +14,7 @@ using AutoMapper;
 using Microsoft.Extensions.Options;
 namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
 {
-    /// <summary>
-        /// Get the source data of each indicator
-        /// </summary>
-        /// <returns></returns>
+
     /********************************************************
     *                     Users Controller                   *
     *********************************************************/

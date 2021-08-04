@@ -199,11 +199,8 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Service
             {
                 bool isInsert = await  _unitOfWork.UserRepository.Insert(user);
                 _unitOfWork.Save();
-                 var response = _mapper.Map<AuthenticateResponse>(user);
-                response.JwtToken = _jwtUtils.GenerateToken(user);
                 responseResult = new ResponseResult();
-                responseResult.Response = response ;
-                 responseResult.ResultStatus = ResponseResultStatusDomain.OK;
+                responseResult.ResultStatus = ResponseResultStatusDomain.OK;
                 responseResult.ResultMessage = FINISHED_SUCCESSFULLY;
             }
             catch (DbUpdateConcurrencyException)

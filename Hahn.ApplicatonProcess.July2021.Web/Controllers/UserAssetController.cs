@@ -11,10 +11,6 @@ using Hahn.ApplicatonProcess.July2021.Domain.Validators;
 using Hahn.ApplicatonProcess.July2021.Web.Service;
 namespace Hahn.ApplicatonProcess.July2021.Web.Controllers
 {
-    /// <summary>
-        /// Get the source data of each indicator
-        /// </summary>
-        /// <returns></returns>
     /********************************************************
     *                 User Asset Controller                 *
     *********************************************************/
