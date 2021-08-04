@@ -38,9 +38,9 @@
     dotnet add package Microsoft.IdentityModel.Tokens --version 6.12.0
     dotnet add package Microsoft.EntityFrameworkCore.Tools --version 5.0.8
     
-#### 2. Install docker & docker-compose
+#### 3. Install docker & docker-compose
 
-#### 3. sudo docker-compose up --d
+#### 4. sudo docker-compose up --d
 
 
 
