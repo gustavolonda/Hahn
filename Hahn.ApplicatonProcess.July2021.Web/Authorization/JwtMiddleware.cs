@@ -24,7 +24,6 @@ namespace Hahn.ApplicatonProcess.July2021.Web.Authorization
         public async Task Invoke(HttpContext context, IUserService userService, IJwtUtils jwtUtils)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            System.Console.WriteLine("Gus "+ token);
             var userId = jwtUtils.ValidateToken(token);
             
 
