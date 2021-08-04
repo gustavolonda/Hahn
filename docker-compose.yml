@@ -1,0 +1,10 @@
+version: "3.3"
+services:
+  web_develop:
+    container_name: web_net
+    image: "mcr.microsoft.com/dotnet/sdk:5.0"
+    volumes:
+      - ./:/app
+    command: dotnet watch --project ./app/Hahn.ApplicatonProcess.July2021.Web run --urls "http://0.0.0.0:80"    
+    ports:
+      - "8091:80"
